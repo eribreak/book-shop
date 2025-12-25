@@ -16,12 +16,8 @@ return new class extends Migration
 
             $table->string('google_id')->nullable();
             $table->string('full_name', 100);
-            $table->string('email', 100)->unique();
+            $table->string('email', 100);
             $table->string('password');
-
-            $table->foreignId('province_id')->nullable()->constrained('provinces')->onDelete('set null');
-            $table->foreignId('district_id')->nullable()->constrained('districts')->onDelete('set null');
-            $table->foreignId('ward_id')->nullable()->constrained('wards')->onDelete('set null');
 
             $table->string('address')->nullable();
             $table->tinyInteger('status')->default(1);
@@ -31,7 +27,6 @@ return new class extends Migration
 
             $table->timestamps();
             $table->softDeletes();
-
 
             $table->index('id');
             $table->unique('email');
