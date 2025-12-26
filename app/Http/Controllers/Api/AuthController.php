@@ -52,4 +52,15 @@ class AuthController extends Controller
         Auth::user()->tokens()->delete();
         return $this->successResponse(null, 'Logged out successfully', 200);
     }
+
+    public function forgotPassword(ForgotPasswordRequest $request)
+    {
+        $status = Password::sendResetLink(
+            $request->only('email')
+        );
+
+        return $status === Password::ResetLinkSent
+            ? $this->successResponse(null, 'Reset link sent to your email', 200)
+            : $this->errorResponse('Unable to send reset link', 400);
+    }
 }
