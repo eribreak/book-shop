@@ -13,91 +13,69 @@ class AuthController extends Controller
 {
     public function register(RegisterRequest $request)
     {
-        try {
-            $request->validated();
+        $request->validated();
 
-            $user = User::create([
-                'full_name' => $request->full_name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-            ]);
+        $user = User::create([
+            'full_name' => $request->full_name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
 
-            $token = $user->createToken('auth_token')->plainTextToken;
+        $token = $user->createToken('auth_token')->plainTextToken;
 
-            return response()->json([
-                'message' => 'Đăng ký thành công',
-                'user' => $user,
-                'access_token' => $token,
-                'token_type' => 'Bearer',
-            ], 201);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Đăng ký thất bại',
-                'error' => $e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'message' => 'Đăng ký thành công',
+            'user' => $user,
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+        ], 201);
     }
 
     public function login(Request $request)
     {
-        try {
-            $request->validate(
-                [
-                    'email' => 'required|email',
-                    'password' => 'required|min:8',
-                ],
-                [
-                    'email.required' => 'Email không được để trống',
-                    'email.email' => 'Email không đúng định dạng',
-                    'password.required' => 'Mật khẩu không được để trống',
-                    'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự',
-                ]
-            );
+        $request->validate(
+            [
+                'email' => 'required|email',
+                'password' => 'required|min:8',
+            ],
+            [
+                'email.required' => 'Email không được để trống',
+                'email.email' => 'Email không đúng định dạng',
+                'password.required' => 'Mật khẩu không được để trống',
+                'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự',
+            ]
+        );
 
-            $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)->first();
 
-            if (!$user || !Hash::check($request->password, $user->password)) {
-                throw ValidationException::withMessages([
-                    'email' => ['Email hoặc mật khẩu không đúng'],
-                ]);
-            }
-
-            $token = $user->createToken('auth_token')->plainTextToken;
-
-            return response()->json([
-                'message' => 'Đăng nhập thành công',
-                'user' => $user,
-                'access_token' => $token,
-                'token_type' => 'Bearer',
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            throw ValidationException::withMessages([
+                'email' => ['Email hoặc mật khẩu không đúng'],
             ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Đăng nhập thất bại',
-                'error' => $e->getMessage(),
-            ], 500);
         }
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Đăng nhập thành công',
+            'user' => $user,
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+        ]);
     }
 
     public function logout(Request $request)
     {
-        try {
-
-            if (! $request->user()) {
-                return response()->json([
-                    'message' => 'Người dùng chưa đăng nhập',
-                ], 401);
-            }
-
-            $request->user()->currentAccessToken()->delete();
-
+        if (! $request->user()) {
             return response()->json([
-                'message' => 'Đăng xuất thành công'
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Đăng xuất thất bại',
-                'error' => $e->getMessage(),
-            ], 500);
+                'message' => 'Người dùng chưa đăng nhập',
+            ], 401);
         }
+
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json([
+            'message' => 'Đăng xuất thành công'
+        ], 200);
     }
 }
