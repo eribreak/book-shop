@@ -10,7 +10,7 @@ class Ward extends Model
     /** @use HasFactory<\Database\Factories\WardFactory> */
     use HasFactory;
 
-    protected $fillable = ['name', 'district_id',];
+    protected $fillable = ['name', 'district_id'];
 
     protected $casts = [
         'district_id' => 'integer',

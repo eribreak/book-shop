@@ -11,9 +11,9 @@ class Image extends Model
     /** @use HasFactory<\Database\Factories\ImageFactory> */
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['url', 'book_id',];
+    protected $fillable = ['url', 'book_id'];
 
-    protected $casts = ['book_id' => 'integer',];
+    protected $casts = ['book_id' => 'integer'];
 
     public function book()
     {

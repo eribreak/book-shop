@@ -10,7 +10,7 @@ class District extends Model
     /** @use HasFactory<\Database\Factories\DistrictFactory> */
     use HasFactory;
 
-    protected $fillable = ['name', 'province_id',];
+    protected $fillable = ['name', 'province_id'];
 
     protected $casts = [
         'province_id' => 'integer',

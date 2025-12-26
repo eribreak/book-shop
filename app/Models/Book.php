@@ -10,7 +10,7 @@ class Book extends Model
 {
     /** @use HasFactory<\Database\Factories\BookFactory> */
     use HasFactory, SoftDeletes;
-    protected $fillable = ['name', 'slug', 'short_description', 'description', 'image_url', 'quantity', 'published_at', 'publisher_id',];
+    protected $fillable = ['name', 'slug', 'short_description', 'description', 'image_url', 'quantity', 'published_at', 'publisher_id'];
 
     protected $casts = [
         'quantity' => 'integer',

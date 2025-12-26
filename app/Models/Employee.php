@@ -11,5 +11,5 @@ class Employee extends Model
     /** @use HasFactory<\Database\Factories\EmployeeFactory> */
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['employee_code', 'email', 'full_name',];
+    protected $fillable = ['employee_code', 'email', 'full_name'];
 }

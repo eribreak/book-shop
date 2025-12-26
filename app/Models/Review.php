@@ -11,7 +11,7 @@ class Review extends Model
     /** @use HasFactory<\Database\Factories\ReviewFactory> */
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['user_id', 'book_id', 'content', 'status', 'rating',];
+    protected $fillable = ['user_id', 'book_id', 'content', 'status', 'rating'];
 
     protected $casts = [
         'user_id' => 'integer',

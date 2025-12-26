@@ -11,7 +11,7 @@ class Category extends Model
 {
     use HasFactory, Notifiable, SoftDeletes;
 
-    protected $fillable = ['name', 'description', 'slug', 'is_home',];
+    protected $fillable = ['name', 'description', 'slug', 'is_home'];
 
     protected function casts(): array
     {

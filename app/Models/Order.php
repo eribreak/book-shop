@@ -11,7 +11,7 @@ class Order extends Model
     /** @use HasFactory<\Database\Factories\OrderFactory> */
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['user_id', 'employee_code', 'full_name', 'email', 'mobile', 'address', 'status', 'province_id', 'district_id', 'ward_id',];
+    protected $fillable = ['user_id', 'employee_code', 'full_name', 'email', 'mobile', 'address', 'status', 'province_id', 'district_id', 'ward_id'];
 
     public function user()
     {
@@ -33,6 +33,6 @@ class Order extends Model
 
     public function orderDetails()
     {
-        return $this->hasOne(OrderDetail::class);
+        return $this->hasMany(OrderDetail::class);
     }
 }

@@ -11,7 +11,7 @@ class Publisher extends Model
     /** @use HasFactory<\Database\Factories\PublisherFactory> */
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['name', 'description', 'slug',];
+    protected $fillable = ['name', 'description', 'slug'];
 
     public function books()
     {

@@ -11,7 +11,7 @@ class Province extends Model
     /** @use HasFactory<\Database\Factories\ProvinceFactory> */
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['name',];
+    protected $fillable = ['name'];
 
     public function districts()
     {

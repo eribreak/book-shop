@@ -11,7 +11,7 @@ class Wishlist extends Model
     /** @use HasFactory<\Database\Factories\WishlistFactory> */
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['user_id', 'book_id',];
+    protected $fillable = ['user_id', 'book_id'];
 
     protected $casts = [
         'user_id' => 'integer',
