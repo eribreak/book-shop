@@ -19,8 +19,7 @@ return new class extends Migration
             $table->string('email', 100);
             $table->string('mobile', 20)->nullable();
             $table->string('address', 255)->nullable();
-            $table->tinyInteger('status')->default(0);
-            // 0: borrowing, 1: returned, 2: overdue, 3: lost
+            $table->tinyInteger('status')->default(0)->comment('0: borrowing, 1: returned, 2: overdue, 3: lost');
             $table->timestamps();
             $table->softDeletes();
 
