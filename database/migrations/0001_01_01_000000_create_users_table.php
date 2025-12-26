@@ -22,10 +22,8 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->tinyInteger('status')->default(1);
             $table->string('mobile', 20)->nullable();
-            $table->tinyInteger('gender')->nullable()->default(1);
-            // 0: male, 1: female, 2: other
-            $table->tinyInteger('role')->default(1);
-            // 1: active, 0: inactive
+            $table->tinyInteger('gender')->nullable()->default(1)->comment('0: male, 1: female, 2: other');
+            $table->tinyInteger('role')->default(1)->comment('1: active, 0: inactive');
 
             $table->timestamps();
             $table->softDeletes();
