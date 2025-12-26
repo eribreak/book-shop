@@ -17,6 +17,7 @@ return new class extends Migration
             $table->text('description');
             $table->string('slug')->unique();
             $table->tinyInteger('is_home')->nullable();
+            // 0: not home, 1: home
             $table->timestamps();
             $table->softDeletes();
 

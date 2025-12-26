@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('book_name');
             $table->integer('quantity')->default(0);
             $table->tinyInteger('status')->default(0);
+            // 0: borrowing, 1: returned, 2: overdue, 3: lost
             $table->datetime('due_date')->nullable();
             $table->timestamps();
 

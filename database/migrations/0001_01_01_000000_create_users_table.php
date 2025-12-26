@@ -16,20 +16,21 @@ return new class extends Migration
 
             $table->string('google_id')->nullable();
             $table->string('full_name', 100);
-            $table->string('email', 100);
+            $table->string('email', 100)->unique();
             $table->string('password');
 
             $table->string('address')->nullable();
             $table->tinyInteger('status')->default(1);
             $table->string('mobile', 20)->nullable();
             $table->tinyInteger('gender')->nullable()->default(1);
+            // 0: male, 1: female, 2: other
             $table->tinyInteger('role')->default(1);
+            // 1: active, 0: inactive
 
             $table->timestamps();
             $table->softDeletes();
 
             $table->index('id');
-            $table->unique('email');
         });
 
 

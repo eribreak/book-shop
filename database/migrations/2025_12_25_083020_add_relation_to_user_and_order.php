@@ -12,15 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->foreignId('province_id')->nullable()->constrained('provinces')->onDelete('cascade');
-            $table->foreignId('district_id')->nullable()->constrained('districts')->onDelete('cascade');
-            $table->foreignId('ward_id')->nullable()->constrained('wards')->onDelete('cascade');
+            $table->foreignId('province_id')->nullable()->constrained('provinces')->onDelete('set null');
+            $table->foreignId('district_id')->nullable()->constrained('districts')->onDelete('set null');
+            $table->foreignId('ward_id')->nullable()->constrained('wards')->onDelete('set null');
         });
 
         Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('province_id')->nullable()->constrained('provinces')->onDelete('cascade');
-            $table->foreignId('district_id')->nullable()->constrained('districts')->onDelete('cascade');
-            $table->foreignId('ward_id')->nullable()->constrained('wards')->onDelete('cascade');
+            $table->foreignId('province_id')->nullable()->constrained('provinces')->onDelete('set null');
+            $table->foreignId('district_id')->nullable()->constrained('districts')->onDelete('set null');
+            $table->foreignId('ward_id')->nullable()->constrained('wards')->onDelete('set null');
         });
     }
 

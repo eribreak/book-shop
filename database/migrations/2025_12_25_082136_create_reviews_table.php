@@ -17,9 +17,11 @@ return new class extends Migration
             $table->foreignId('book_id')->constrained('books')->onDelete('cascade');
             $table->text('content');
             $table->tinyInteger('status')->default(0);
+            // 0: pending, 1: approved, 2: rejected
             $table->tinyInteger('rating')->default(5);
+            // rating from 1 to 5
             $table->timestamps();
-            $table->softDeletes()->nullable();
+            $table->softDeletes();
 
             $table->index('id');
         });

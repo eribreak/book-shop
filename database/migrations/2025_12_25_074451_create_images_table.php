@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('url');
             $table->foreignId('book_id')->constrained('books')->onDelete('cascade');
             $table->timestamps();
-            $table->softDeletes()->nullable();
+            $table->softDeletes();
 
             $table->index('id');
         });

@@ -20,8 +20,9 @@ return new class extends Migration
             $table->string('mobile', 20)->nullable();
             $table->string('address', 255)->nullable();
             $table->tinyInteger('status')->default(0);
+            // 0: borrowing, 1: returned, 2: overdue, 3: lost
             $table->timestamps();
-            $table->softDeletes()->nullable();
+            $table->softDeletes();
 
             $table->index('id');
         });
