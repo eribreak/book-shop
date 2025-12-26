@@ -8,74 +8,44 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use App\Http\Requests\Auth\RegisterRequest;
+use App\Http\Requests\Auth\LoginRequest;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
     public function register(RegisterRequest $request)
     {
-        $request->validated();
-
         $user = User::create([
             'full_name' => $request->full_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()->json([
-            'message' => 'Đăng ký thành công',
+        return $this->successResponse([
             'user' => $user,
-            'access_token' => $token,
             'token_type' => 'Bearer',
-        ], 201);
+        ], 'Register successfully', 201);
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $request->validate(
-            [
-                'email' => 'required|email',
-                'password' => 'required|min:8',
-            ],
-            [
-                'email.required' => 'Email không được để trống',
-                'email.email' => 'Email không đúng định dạng',
-                'password.required' => 'Mật khẩu không được để trống',
-                'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự',
-            ]
-        );
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            $user = Auth::user();
+            $accessToken = $user->createToken('authToken')->accessToken;
 
-        $user = User::where('email', $request->email)->first();
-
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['Email hoặc mật khẩu không đúng'],
-            ]);
+            return $this->successResponse([
+                'user' => $user,
+                'access_token' => $accessToken,
+                'token_type' => 'Bearer',
+            ], 'Log in successfully', 200);
+        } else {
+            return $this->errorResponse('Login information is invalid', 401);
         }
-
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()->json([
-            'message' => 'Đăng nhập thành công',
-            'user' => $user,
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-        ]);
     }
 
-    public function logout(Request $request)
+    public function logout()
     {
-        if (! $request->user()) {
-            return response()->json([
-                'message' => 'Người dùng chưa đăng nhập',
-            ], 401);
-        }
-
-        $request->user()->currentAccessToken()->delete();
-
-        return response()->json([
-            'message' => 'Đăng xuất thành công'
-        ], 200);
+        Auth::user()->tokens()->delete();
+        return $this->successResponse(null, 'Logged out successfully', 200);
     }
 }
