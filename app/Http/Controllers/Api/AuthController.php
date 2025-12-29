@@ -63,4 +63,22 @@ class AuthController extends Controller
             ? $this->successResponse(null, 'Reset link sent to your email', 200)
             : $this->errorResponse('Unable to send reset link', 400);
     }
+
+    public function resetPassword(ResetPasswordRequest $request)
+    {
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user, $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password)
+                ])->save();
+
+                $user->tokens()->delete();
+            }
+        );
+
+        return $status === Password::PasswordReset
+            ? $this->successResponse(null, 'Password has been reset successfully', 200)
+            : $this->errorResponse('Failed to reset password', 400);
+    }
 }
