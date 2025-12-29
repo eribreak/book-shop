@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::table('order_details', function (Blueprint $table) {
             if (!Schema::hasColumn('order_details', 'deleted_at')) {
-                $table->softDeletes()->nullable();
+                $table->softDeletes();
             }
         });
     }
