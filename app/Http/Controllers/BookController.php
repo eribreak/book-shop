@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\Interface\BookReportRepositoryInterface;
 use App\Repositories\Interface\BookRepositoryInterface;
 use Illuminate\Http\Request;
 use App\Http\Requests\Book\BookListRequest;
@@ -10,6 +11,7 @@ class BookController extends Controller
 {
     public function __construct(
         private readonly BookRepositoryInterface $bookRepository,
+        private readonly BookReportRepositoryInterface $bookReportRepository,
     ) {}
 
     public function getBooks(BookListRequest $request)
@@ -25,6 +27,36 @@ class BookController extends Controller
         $books = $this->bookRepository->getBooks($filters, $perPage);
         $books->appends($request->query());
 
-        return $this->successResponse($books);
+        return response()->json($books);
+    }
+
+    public function borrowedMonthly(Request $request)
+    {
+        $year = (int) $request->query('year', now()->year);
+
+        return response()->json([
+            'year' => $year,
+            'data' => $this->bookReportRepository->getBorrowedQuantityByMonth($year),
+        ]);
+    }
+
+    public function topBorrowers(Request $request)
+    {
+        $limit = (int) $request->query('limit', 10);
+
+        return response()->json([
+            'limit' => max(1, min($limit, 100)),
+            'data' => $this->bookReportRepository->getTopBorrowers($limit),
+        ]);
+    }
+
+    public function topBorrowedBooks(Request $request)
+    {
+        $limit = (int) $request->query('limit', 10);
+
+        return response()->json([
+            'limit' => max(1, min($limit, 100)),
+            'data' => $this->bookReportRepository->getTopBorrowedBooks($limit),
+        ]);
     }
 }
