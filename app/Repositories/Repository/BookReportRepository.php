@@ -92,4 +92,53 @@ class BookReportRepository implements BookReportRepositoryInterface
             'total_borrowed' => (int) $r->total_borrowed,
         ])->all();
     }
+
+    public function getBooksCountByCategory(): array
+    {
+        $rows = DB::table('categories')
+            ->leftJoin('book_category', 'book_category.category_id', '=', 'categories.id')
+            ->leftJoin('books', function ($join) {
+                $join->on('books.id', '=', 'book_category.book_id')
+                    ->whereNull('books.deleted_at');
+            })
+            ->whereNull('categories.deleted_at')
+            ->groupBy('categories.id')
+            ->select(
+                'categories.id as category_id',
+                'categories.name'
+            )
+            ->selectRaw('COUNT(DISTINCT books.id) as books_count')
+            ->orderBy('categories.name')
+            ->get();
+
+        return $rows->map(fn($r) => [
+            'category_id' => (int) $r->category_id,
+            'name' => (string) $r->name,
+            'books_count' => (int) $r->books_count,
+        ])->all();
+    }
+
+    public function getTopWishlistedBooks(int $limit = 30): array
+    {
+        $rows = DB::table('wishlists')
+            ->join('books', 'books.id', '=', 'wishlists.book_id')
+            ->whereNull('books.deleted_at')
+            ->groupBy('books.id')
+            ->select(
+                'books.id as book_id',
+                'books.name',
+                'books.image_url'
+            )
+            ->selectRaw('COUNT(*) as wishlist_count')
+            ->orderByDesc('wishlist_count')
+            ->limit($limit)
+            ->get();
+
+        return $rows->map(fn($r) => [
+            'book_id' => (int) $r->book_id,
+            'name' => (string) $r->name,
+            'image_url' => $r->image_url !== null ? (string) $r->image_url : null,
+            'wishlist_count' => (int) $r->wishlist_count,
+        ])->all();
+    }
 }

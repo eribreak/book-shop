@@ -59,4 +59,21 @@ class BookController extends Controller
             'data' => $this->bookReportRepository->getTopBorrowedBooks($limit),
         ]);
     }
+
+    public function booksCountByCategory()
+    {
+        return response()->json([
+            'data' => $this->bookReportRepository->getBooksCountByCategory(),
+        ]);
+    }
+
+    public function topWishlistedBooks(Request $request)
+    {
+        $limit = (int) $request->query('limit', 30);
+
+        return response()->json([
+            'limit' => max(1, min($limit, 100)),
+            'data' => $this->bookReportRepository->getTopWishlistedBooks($limit),
+        ]);
+    }
 }
