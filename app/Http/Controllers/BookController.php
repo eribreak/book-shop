@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Repositories\Interface\BookRepositoryInterface;
 use Illuminate\Http\Request;
 use App\Http\Requests\Book\BookListRequest;
+use App\Http\Requests\Book\FormBookRequest;
 
 class BookController extends Controller
 {
@@ -12,7 +13,7 @@ class BookController extends Controller
         private readonly BookRepositoryInterface $bookRepository,
     ) {}
 
-    public function getBooks(BookListRequest $request)
+    public function getList(BookListRequest $request)
     {
         $perPage = (int) $request->query('per_page', 16);
         $filters = [
@@ -26,5 +27,46 @@ class BookController extends Controller
         $books->appends($request->query());
 
         return $this->successResponse($books);
+    }
+
+    public function getDetail(int $id)
+    {
+        $book = $this->bookRepository->getDetail($id);
+
+        if (!$book) {
+            return $this->errorResponse('Book not found.');
+        }
+
+        return $this->successResponse($book);
+    }
+
+    public function create(FormBookRequest $request)
+    {
+        $data = $request->validated();
+        $book = $this->bookRepository->create($data);
+
+        return $this->successResponse($book, 'Book created successfully.', 201);
+    }
+
+    public function update(int $id, FormBookRequest $request)
+    {
+        $data = $request->validated();
+        $book = $this->bookRepository->update($id, $data);
+
+        if (!$book) {
+            return $this->errorResponse('Book not found.');
+        }
+
+        return $this->successResponse($book, 'Book updated successfully.');
+    }
+    public function delete(int $id)
+    {
+        $deleted = $this->bookRepository->delete($id);
+
+        if (!$deleted) {
+            return $this->errorResponse('Book not found.');
+        }
+
+        return $this->successResponse('Book deleted successfully.');
     }
 }

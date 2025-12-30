@@ -11,7 +11,15 @@ Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.reset');
 Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle']);
-Route::get('/books', [BookController::class, 'getBooks']);
+
+Route::prefix('books')->middleware('auth:api', 'role:admin')->group(function () {
+    Route::get('/', [BookController::class, 'getList']);
+    Route::get('/{id}', [BookController::class, 'getDetail']);
+    Route::post('/', [BookController::class, 'create']);
+    Route::put('/{id}', [BookController::class, 'update']);
+    Route::delete('/{id}', [BookController::class, 'delete']);
+});
+
 
 Route::middleware('auth:api')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);

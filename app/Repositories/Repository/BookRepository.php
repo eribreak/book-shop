@@ -5,6 +5,7 @@ namespace App\Repositories\Repository;
 use App\Models\Book;
 use App\Repositories\Interface\BookRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Str;
 
 class BookRepository implements BookRepositoryInterface
 {
@@ -51,6 +52,56 @@ class BookRepository implements BookRepositoryInterface
         return $query->paginate($perPage);
     }
 
+    public function getDetail(int $id): ?Book
+    {
+        return Book::with(['categories', 'authors', 'publisher'])->find($id);
+    }
+
+    public function create(array $data): Book
+    {
+        $book = Book::create([
+            'name' => $data['name'],
+            'slug' => Str::slug($data['name']),
+            'short_description' => $data['short_description'],
+            'description' => $data['description'],
+            'publisher_id' => $data['publisher_id'],
+            'quantity' => $data['quantity'],
+            'image_url' => $data['image_url'],
+            'published_at' => $data['published_at'] ?? null,
+        ]);
+
+        $book->categories()->sync($this->normalizeIds($data['category_ids']));
+        $book->authors()->sync($this->normalizeIds($data['author_ids']));
+        return $book->load(['categories', 'authors', 'publisher']);
+    }
+
+    public function update(int $id, array $data): ?Book
+    {
+        $book = Book::find($id);
+        if ($book) {
+            $book->update([
+                'name' => $data['name'],
+                'slug' => Str::slug($data['name']),
+                'short_description' => $data['short_description'],
+                'description' => $data['description'],
+                'publisher_id' => $data['publisher_id'],
+                'quantity' => $data['quantity'],
+                'image_url' => $data['image_url'],
+                'published_at' => $data['published_at'] ?? null,
+            ]);
+            $book->categories()->sync($this->normalizeIds($data['category_ids']));
+            $book->authors()->sync($this->normalizeIds($data['author_ids']));
+        }
+        return $book->load(['categories', 'authors', 'publisher']);
+    }
+    public function delete(int $id): bool
+    {
+        $book = Book::find($id);
+        if ($book) {
+            return $book->delete();
+        }
+        return false;
+    }
     private function normalizeIds(array $ids): array
     {
         return array_values(array_filter(
