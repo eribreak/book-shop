@@ -6,6 +6,8 @@ use App\Repositories\Interface\BookRepositoryInterface;
 use App\Repositories\Repository\BookRepository;
 use App\Repositories\Interface\UserRepositoryInterface;
 use App\Repositories\Repository\UserRepository;
+use App\Repositories\Interface\CategoryRepositoryInterface;
+use App\Repositories\Repository\CategoryRepository;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -17,6 +19,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(BookRepositoryInterface::class, BookRepository::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+        $this->app->bind(CategoryRepositoryInterface::class, CategoryRepository::class);
     }
 
     /**

@@ -4,6 +4,8 @@ use App\Http\Controllers\Api\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\GoogleController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\CategoryController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -21,9 +23,18 @@ Route::prefix('books')->middleware('auth:api', 'role:admin')->group(function () 
 });
 
 Route::prefix('users')->middleware('auth:api', 'role:admin')->group(function () {
-    Route::get('/', [\App\Http\Controllers\UserController::class, 'getList']);
-    Route::get('/{id}', [\App\Http\Controllers\UserController::class, 'getDetail']);
-    Route::post('/{id}/lock', [\App\Http\Controllers\UserController::class, 'lockUser']);
+    Route::get('/', [UserController::class, 'getList']);
+    Route::get('/{id}', [UserController::class, 'getDetail']);
+    Route::post('/{id}/lock', [UserController::class, 'lockUser']);
+});
+
+Route::prefix('categories')->middleware('auth:api', 'role:admin')->group(function () {
+    Route::get('/', [CategoryController::class, 'getList']);
+    Route::get('/{id}', [CategoryController::class, 'getDetail']);
+    Route::post('/', [CategoryController::class, 'create']);
+    Route::put('/{id}', [CategoryController::class, 'update']);
+    Route::delete('/{id}', [CategoryController::class, 'delete']);
+    Route::post('/bulk-delete', [CategoryController::class, 'bulkDelete']);
 });
 
 Route::middleware('auth:api')->group(function () {
