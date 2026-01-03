@@ -29,6 +29,15 @@ Route::prefix('authors')->middleware('auth:api', 'role:admin')->group(function (
     Route::post('/bulk-delete', [\App\Http\Controllers\AuthorController::class, 'bulkDelete']);
 });
 
+Route::prefix('publishers')->middleware('auth:api', 'role:admin')->group(function () {
+    Route::get('/', [\App\Http\Controllers\PublisherController::class, 'getList']);
+    Route::get('/{id}', [\App\Http\Controllers\PublisherController::class, 'getDetail']);
+    Route::post('/', [\App\Http\Controllers\PublisherController::class, 'create']);
+    Route::put('/{id}', [\App\Http\Controllers\PublisherController::class, 'update']);
+    Route::delete('/{id}', [\App\Http\Controllers\PublisherController::class, 'delete']);
+    Route::post('/bulk-delete', [\App\Http\Controllers\PublisherController::class, 'bulkDelete']);
+});
+
 Route::middleware('auth:api')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 });
