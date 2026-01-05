@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\GoogleController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\BorrowOrderController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -23,4 +24,10 @@ Route::prefix('books')->middleware('auth:api', 'role:admin')->group(function () 
 
 Route::middleware('auth:api')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
+});
+
+Route::prefix('orders')->middleware('auth:api', 'role:admin')->group(function () {
+    Route::get('/', [BorrowOrderController::class, 'getList']);
+    Route::get('/{id}', [BorrowOrderController::class, 'getDetail']);
+    Route::patch('/{orderId}/details/{detailId}/status', [BorrowOrderController::class, 'updateDetailStatus']);
 });
