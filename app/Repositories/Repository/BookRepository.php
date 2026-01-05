@@ -6,6 +6,8 @@ use App\Models\Book;
 use App\Repositories\Interface\BookRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Str;
+use App\Helper\Normalize;
+
 
 class BookRepository implements BookRepositoryInterface
 {
@@ -13,13 +15,13 @@ class BookRepository implements BookRepositoryInterface
     {
         $name = isset($filters['q']) ? trim((string) $filters['q']) : '';
 
-        $categoryIds = $this->normalizeIds($filters['category_id'] ?? []);
-        $authorIds = $this->normalizeIds($filters['author_id'] ?? []);
-        $publisherIds = $this->normalizeIds($filters['publisher_id'] ?? []);
+        $categoryIds = Normalize::normalizeIds($filters['category_id'] ?? []);
+        $authorIds = Normalize::normalizeIds($filters['author_id'] ?? []);
+        $publisherIds = Normalize::normalizeIds($filters['publisher_id'] ?? []);
 
         $query = Book::query()
             ->with(['categories', 'authors', 'publisher'])
-            ->when($name !== '', function ($q) use ($name) {
+            ->when(!empty($name), function ($q) use ($name) {
                 $q->where(function ($qq) use ($name) {
                     $like = '%' . $name . '%';
                     $qq->where('name', 'like', $like)
@@ -70,8 +72,8 @@ class BookRepository implements BookRepositoryInterface
             'published_at' => $data['published_at'] ?? null,
         ]);
 
-        $book->categories()->sync($this->normalizeIds($data['category_ids']));
-        $book->authors()->sync($this->normalizeIds($data['author_ids']));
+        $book->categories()->sync(Normalize::normalizeIds($data['category_ids']));
+        $book->authors()->sync(Normalize::normalizeIds($data['author_ids']));
         return $book->load(['categories', 'authors', 'publisher']);
     }
 
@@ -89,8 +91,8 @@ class BookRepository implements BookRepositoryInterface
                 'image_url' => $data['image_url'],
                 'published_at' => $data['published_at'] ?? null,
             ]);
-            $book->categories()->sync($this->normalizeIds($data['category_ids']));
-            $book->authors()->sync($this->normalizeIds($data['author_ids']));
+            $book->categories()->sync(Normalize::normalizeIds($data['category_ids']));
+            $book->authors()->sync(Normalize::normalizeIds($data['author_ids']));
         }
         return $book->load(['categories', 'authors', 'publisher']);
     }
@@ -101,12 +103,5 @@ class BookRepository implements BookRepositoryInterface
             return $book->delete();
         }
         return false;
-    }
-    private function normalizeIds(array $ids): array
-    {
-        return array_values(array_filter(
-            array_map('intval', $ids),
-            fn($id) => $id > 0
-        ));
     }
 }

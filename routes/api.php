@@ -13,11 +13,11 @@ Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallb
 Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle']);
 
 Route::prefix('books')->middleware('auth:api', 'role:admin')->group(function () {
-    Route::get('/', [BookController::class, 'getList']);
-    Route::get('/{id}', [BookController::class, 'getDetail']);
-    Route::post('/', [BookController::class, 'create']);
-    Route::put('/{id}', [BookController::class, 'update']);
-    Route::delete('/{id}', [BookController::class, 'delete']);
+    Route::get('/', [BookController::class, 'getList'])->name('books.list');
+    Route::get('/{id}', [BookController::class, 'getDetail'])->name('books.detail');
+    Route::post('/', [BookController::class, 'create'])->name('books.create');
+    Route::put('/{id}', [BookController::class, 'update'])->name('books.update');
+    Route::delete('/{id}', [BookController::class, 'delete'])->name('books.delete');
 });
 
 

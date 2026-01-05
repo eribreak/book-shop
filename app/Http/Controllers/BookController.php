@@ -6,6 +6,7 @@ use App\Repositories\Interface\BookRepositoryInterface;
 use Illuminate\Http\Request;
 use App\Http\Requests\Book\BookListRequest;
 use App\Http\Requests\Book\FormBookRequest;
+use App\Constant\PerPage;
 
 class BookController extends Controller
 {
@@ -15,7 +16,7 @@ class BookController extends Controller
 
     public function getList(BookListRequest $request)
     {
-        $perPage = (int) $request->query('per_page', 16);
+        $perPage = (int) $request->query('per_page', PerPage::DEFAULT);
         $filters = [
             'q' => $request->query('q', ''),
             'category_id' => $request->query('category_id'),
@@ -45,7 +46,7 @@ class BookController extends Controller
         $data = $request->validated();
         $book = $this->bookRepository->create($data);
 
-        return $this->successResponse($book, 'Book created successfully.', 201);
+        return $this->successResponse($book, 'Book created successfully.');
     }
 
     public function update(int $id, FormBookRequest $request)
