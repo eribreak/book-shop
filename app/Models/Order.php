@@ -6,6 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+enum Status: int
+{
+    case BORROWING = 0;
+    case RETURNED = 1;
+    case OVERDUE = 2;
+    case LOST = 3;
+}
+
 class Order extends Model
 {
     /** @use HasFactory<\Database\Factories\OrderFactory> */
