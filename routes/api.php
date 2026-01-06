@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\GoogleController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\EmployeeController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -18,6 +19,16 @@ Route::prefix('books')->middleware('auth:api', 'role:admin')->group(function () 
     Route::post('/', [BookController::class, 'create'])->name('books.create');
     Route::put('/{id}', [BookController::class, 'update'])->name('books.update');
     Route::delete('/{id}', [BookController::class, 'delete'])->name('books.delete');
+});
+
+Route::prefix('employees')->middleware('auth:api', 'role:admin')->group(function () {
+    Route::get('/', [EmployeeController::class, 'getList']);
+    Route::get('/{id}', [EmployeeController::class, 'getDetail']);
+    Route::post('/', [EmployeeController::class, 'create']);
+    Route::put('/{id}', [EmployeeController::class, 'update']);
+    Route::delete('/{id}', [EmployeeController::class, 'delete']);
+    Route::post('/import', [EmployeeController::class, 'import']);
+    Route::post('/bulk-delete', [EmployeeController::class, 'bulkDelete']);
 });
 
 
