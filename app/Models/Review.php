@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+enum ReviewStatus: int
+{
+    case PENDING = 0;
+    case APPROVED = 1;
+    case DECLINED = 2;
+}
+
 class Review extends Model
 {
     /** @use HasFactory<\Database\Factories\ReviewFactory> */
